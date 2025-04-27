@@ -9,8 +9,7 @@ require("lazy").setup({
         "nvim-treesitter/nvim-treesitter",
         build = ":TSUpdate",
         config = function()
-        require("nvim-treesitter.configs").setup(
-        {
+        require("nvim-treesitter.configs").setup({
             highlight = { enable = true },
             indent = { enable = true },
         })
@@ -20,8 +19,8 @@ require("lazy").setup({
     -- Telescope (fuzzy finder)
     {
         "nvim-telescope/telescope.nvim", tag='0.1.8',
-            dependencies = { "nvim-lua/plenary.nvim" },
-            config = function()
+        dependencies = { "nvim-lua/plenary.nvim" },
+        config = function()
             require("telescope").setup({
             defaults = {
             layout_config = { prompt_position = "top" },
@@ -29,8 +28,9 @@ require("lazy").setup({
             winblend = 10,
             }
         })
-    end,
-            keys = {
+        end,
+        keys =
+        {
             { "<leader>ff", "<cmd>Telescope find_files<cr>", desc = "Find Files" },
             { "<leader>fg", "<cmd>Telescope live_grep<cr>",  desc = "Live Grep" },
             { "<leader>fb", "<cmd>Telescope buffers<cr>",    desc = "Buffers" },
@@ -40,10 +40,32 @@ require("lazy").setup({
 
     {
         "nvim-lualine/lualine.nvim",
-            config = function()
-            require("lualine").setup()
+        config = function()
+        require("lualine").setup()
+        end,
+    },
+
+    {
+        "neovim/nvim-lspconfig",
+        config = function()
+        require("lspconfig")
+        end,
+    },
+
+    {
+        "williamboman/mason.nvim",
+        config = true,
+    },
+
+    {
+        "williamboman/mason-lspconfig.nvim",
+        config = function()
+        require("mason-lspconfig").setup({
+            ensure_installed = { "lua_ls", "pyright", "omnisharp", "html", "cssls" }, -- Add any LSP you want here
+            automatic_installation = true,
+            })
         end,
     },
 
 
-    })
+})
