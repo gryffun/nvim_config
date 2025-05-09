@@ -74,7 +74,12 @@ require("lazy").setup({
             { "ms-jpq/coq.thirdparty", branch = "3p" },
         },
         init = function()
-            vim.g.coq_settings = { auto_start = true, }
+            vim.g.coq_settings = {
+            auto_start = true,
+            display = {
+                pum = { y_max_len = 6 },
+                },
+            }
         end,
     },
 
