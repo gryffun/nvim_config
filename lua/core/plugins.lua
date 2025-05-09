@@ -6,6 +6,21 @@ require("lazy").setup({
     { "tpope/vim-fugitive" },
 
     {
+        "folke/tokyonight.nvim",
+        lazy = false,
+        priority = 1000,
+        opts = {},
+    },
+
+    {
+        "lukas-reineke/indent-blankline.nvim",
+        main = "ibl",
+        ---@module "ibl"
+        ---@type ibl.config
+        opts = {},
+    },
+
+    {
         "nvim-treesitter/nvim-treesitter",
         build = ":TSUpdate",
         config = function()
@@ -44,7 +59,9 @@ require("lazy").setup({
     {
         "nvim-lualine/lualine.nvim",
         config = function()
-            require("lualine").setup()
+            require("lualine").setup({
+            options={ theme = "tokyonight"}
+            })
         end,
     },
 
@@ -83,3 +100,9 @@ require("lazy").setup({
         end,
     },
 })
+
+
+-- non-lsp plugin set up
+
+vim.cmd[[colorscheme tokyonight]]
+require("ibl").setup()
