@@ -74,12 +74,7 @@ require("lazy").setup({
             { "ms-jpq/coq.thirdparty", branch = "3p" },
         },
         init = function()
-            vim.g.coq_settings = {
-                auto_start = true,
-            }
-        end,
-        config = function()
-            require("lspconfig")
+            vim.g.coq_settings = { auto_start = true, }
         end,
     },
 
@@ -106,3 +101,5 @@ require("lazy").setup({
 
 vim.cmd[[colorscheme tokyonight]]
 require("ibl").setup()
+
+

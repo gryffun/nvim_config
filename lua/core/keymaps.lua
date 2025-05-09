@@ -1,6 +1,8 @@
 -- core/keymaps.lua
 local keymap = vim.keymap.set
 
+
+
 -- Space as leader key
 vim.g.mapleader = " "
 
@@ -11,3 +13,20 @@ keymap("n", "<leader>w", ":w<CR>")     -- save file
 keymap("n", "<leader>qq", ":q<CR>")     -- quit 
 
 
+-- coq remaps
+-- Disable up/down in insert mode unless popup menu is visible
+vim.keymap.set("i", "<Up>", function()
+  if vim.fn.pumvisible() == 1 then
+    return "<C-o>k"
+  else
+    return "<Up>"
+  end
+end, { expr = true, silent = true })
+
+vim.keymap.set("i", "<Down>", function()
+  if vim.fn.pumvisible() == 1 then
+    return "<C-o>j"
+  else
+    return "<Down>"
+  end
+end, { expr = true, silent = true })
