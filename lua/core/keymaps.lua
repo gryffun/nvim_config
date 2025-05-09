@@ -31,9 +31,14 @@ vim.keymap.set("i", "<Down>", function()
   end
 end, { expr = true, silent = true })
 
+local function popup_selected()
+  local info = vim.fn.complete_info({ "selected" })
+  return info.selected  -- -1 = nothing selected; 0+ = index of selection
+end
+
 -- make cntrl-tab select option from menu
 vim.keymap.set("i", "<Space>", function()
-  if vim.fn.pumvisible() == 1 then
+  if vim.fn.pumvisible() == 1 and popup_selected() >= 0 then
     return "<C-y>" -- enter key without newline
   else
     return "<Space>"
