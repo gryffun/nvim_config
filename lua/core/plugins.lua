@@ -1,6 +1,6 @@
 -- core/plugin.lua
 
-vim.opt.rtp:prepend("~/.local/share/nvim/lazy/lazy.nvim")
+vim.opt.rtp:prepend(vim.fn.stdpath("data") .. "/lazy/lazy.nvim")  -- Fixed path resolution
 
 require("lazy").setup({
     { "tpope/vim-fugitive" },
@@ -9,28 +9,31 @@ require("lazy").setup({
         "nvim-treesitter/nvim-treesitter",
         build = ":TSUpdate",
         config = function()
-        require("nvim-treesitter.configs").setup({
-            highlight = { enable = true },
-            indent = { enable = true },
-        })
+            require("nvim-treesitter.configs").setup({
+                ensure_installed = {
+                    "c", "c_sharp", "gdscript", "lua", "markdown",
+                    "css", "html", "javascript", "python"
+                },
+                highlight = { enable = true },
+                indent = { enable = true },
+            })
         end,
     },
 
-    -- Telescope (fuzzy finder)
     {
-        "nvim-telescope/telescope.nvim", tag='0.1.8',
+        "nvim-telescope/telescope.nvim",
+        tag = "0.1.8",
         dependencies = { "nvim-lua/plenary.nvim" },
         config = function()
             require("telescope").setup({
-            defaults = {
-            layout_config = { prompt_position = "top" },
-            sorting_strategy = "ascending",
-            winblend = 10,
-            }
-        })
+                defaults = {
+                    layout_config = { prompt_position = "top" },
+                    sorting_strategy = "ascending",
+                    winblend = 10,
+                }
+            })
         end,
-        keys =
-        {
+        keys = {
             { "<leader>ff", "<cmd>Telescope find_files<cr>", desc = "Find Files" },
             { "<leader>fg", "<cmd>Telescope live_grep<cr>",  desc = "Live Grep" },
             { "<leader>fb", "<cmd>Telescope buffers<cr>",    desc = "Buffers" },
@@ -41,14 +44,25 @@ require("lazy").setup({
     {
         "nvim-lualine/lualine.nvim",
         config = function()
-        require("lualine").setup()
+            require("lualine").setup()
         end,
     },
 
     {
         "neovim/nvim-lspconfig",
+        lazy = false,
+        dependencies = {
+            { "ms-jpq/coq.nvim", branch = "coq" },
+            { "ms-jpq/coq.artifacts", branch = "artifacts" },
+            { "ms-jpq/coq.thirdparty", branch = "3p" },
+        },
+        init = function()
+            vim.g.coq_settings = {
+                auto_start = true,
+            }
+        end,
         config = function()
-        require("lspconfig")
+            require("lspconfig")
         end,
     },
 
@@ -60,12 +74,12 @@ require("lazy").setup({
     {
         "williamboman/mason-lspconfig.nvim",
         config = function()
-        require("mason-lspconfig").setup({
-            ensure_installed = { "lua_ls", "pyright", "omnisharp", "html", "cssls" }, -- Add any LSP you want here
-            automatic_installation = true,
+            require("mason-lspconfig").setup({
+                ensure_installed = {
+                    "lua_ls", "pyright", "omnisharp", "html", "cssls"
+                },
+                automatic_installation = true,
             })
         end,
     },
-
-
 })
