@@ -30,3 +30,12 @@ vim.keymap.set("i", "<Down>", function()
     return "<Down>"
   end
 end, { expr = true, silent = true })
+
+-- make cntrl-tab select option from menu
+vim.keymap.set("i", "<Space>", function()
+  if vim.fn.pumvisible() == 1 then
+    return "<C-y>" -- enter key without newline
+  else
+    return "<Space>"
+  end
+end, { expr = true, silent = true })
