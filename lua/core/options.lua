@@ -12,4 +12,3 @@ opt.wrap = true -- no line wrapping
 opt.clipboard = "unnamedplus"  -- system clipboard
 opt.cursorline = true -- big underline
 opt.mouse = 'a' -- enable mouse in certain parts of vim. 'a' for all
-

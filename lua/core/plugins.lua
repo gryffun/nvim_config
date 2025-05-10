@@ -3,8 +3,21 @@
 vim.opt.rtp:prepend(vim.fn.stdpath("data") .. "/lazy/lazy.nvim")  -- Fixed path resolution
 
 require("lazy").setup({
+    -- git plugin for vim
     { "tpope/vim-fugitive" },
+    -- adds icons and fonts
+    { "nvim-tree/nvim-web-devicons", opts = {} },
 
+    -- Clean trailing whitespace on save
+    {
+    "mcauley-penney/tidy.nvim",
+    opts = {
+        enabled_on_save = true, -- set to false to turn off
+        filetype_exclude = { "markdown", "diff" } -- won't act on these files'
+        },
+    },
+
+    -- Colour schemes
     {
         "folke/tokyonight.nvim",
         lazy = false,
@@ -12,6 +25,7 @@ require("lazy").setup({
         opts = {},
     },
 
+    -- Indent lines and current scope highlighting
     {
         "lukas-reineke/indent-blankline.nvim",
         main = "ibl",
@@ -20,6 +34,7 @@ require("lazy").setup({
         opts = {},
     },
 
+    -- Treesitter is required for current nvim versions
     {
         "nvim-treesitter/nvim-treesitter",
         build = ":TSUpdate",
@@ -35,6 +50,7 @@ require("lazy").setup({
         end,
     },
 
+    -- Fuzzy Finder
     {
         "nvim-telescope/telescope.nvim",
         tag = "0.1.8",
@@ -56,6 +72,7 @@ require("lazy").setup({
         },
     },
 
+    -- Current Line Highlighting
     {
         "nvim-lualine/lualine.nvim",
         config = function()
@@ -65,6 +82,7 @@ require("lazy").setup({
         end,
     },
 
+    -- LSP stuff
     {
         "neovim/nvim-lspconfig",
         lazy = false,
@@ -99,10 +117,33 @@ require("lazy").setup({
             })
         end,
     },
+
+    -- Scrollbar with debug colouration
+    {
+        "petertriho/nvim-scrollbar",
+        config = function()
+            local colors = require("tokyonight.colors").setup()
+            require("scrollbar").setup({
+                handle = {
+                    color = colors.bg_highlight,
+                },
+                marks = {
+                    Search = { color = colors.orange },
+                    Error = { color = colors.error },
+                    Warn = { color = colors.warning },
+                    Info = { color = colors.info },
+                    Hint = { color = colors.hint },
+                    Misc = { color = colors.purple },
+                }
+            })
+        end,
+        -- dependencies = { "folke/tokyonight.nvim" }  -- not necessarily needed if not using colors from tokyonight or have it set up elsewhere
+    }
+
 })
 
 
--- non-lsp plugin set up
+-- non-lsp plugin additional set up
 
 vim.cmd[[colorscheme tokyonight]]
 require("ibl").setup()

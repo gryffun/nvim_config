@@ -1,5 +1,3 @@
-
-
 -- Error/Warning display
 vim.o.updatetime = 250
 vim.diagnostic.config({
