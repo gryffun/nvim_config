@@ -86,19 +86,6 @@ require("lazy").setup({
     {
         "neovim/nvim-lspconfig",
         lazy = false,
-        dependencies = {
-            { "ms-jpq/coq.nvim", branch = "coq" },
-            { "ms-jpq/coq.artifacts", branch = "artifacts" },
-            { "ms-jpq/coq.thirdparty", branch = "3p" },
-        },
-        init = function()
-            vim.g.coq_settings = {
-            auto_start = true,
-            display = {
-                pum = { y_max_len = 6 },
-                },
-            }
-        end,
     },
 
     {
@@ -116,6 +103,118 @@ require("lazy").setup({
                 automatic_installation = true,
             })
         end,
+    },
+
+    -- Autocomplete with function information
+    {
+        "hrsh7th/nvim-cmp",
+        event = "InsertEnter",
+        dependencies = {
+            "hrsh7th/cmp-nvim-lsp",
+            "hrsh7th/cmp-buffer",
+            "hrsh7th/cmp-path",
+            "hrsh7th/cmp-cmdline",
+            "L3MON4D3/LuaSnip",
+            "saadparwaiz1/cmp_luasnip",
+        },
+        config = function()
+            local cmp = require("cmp")
+            local luasnip = require("luasnip")
+
+            cmp.setup({
+                window = {
+                    completion = {
+                        border = "", -- pretty border
+                        max_width = 80,
+                        max_height = 8,
+                        scrollbar = false,
+                    },
+                    documentation = {
+                        border = "", -- pretty border
+                        max_width = 80,
+                        max_height = 15,
+                    },
+                },
+
+                performance = {
+                    debounce = 0,    -- milliseconds of typing before it refreshes: default 0
+                    throttle = 0,    -- minimum ms between two refreshes: default 0
+                    fetching_timeout = 100,
+                    max_view_entries = 15,
+                },
+
+                snippet = {
+                    expand = function(args)
+                        luasnip.lsp_expand(args.body)
+                    end,
+                },
+
+                mapping = cmp.mapping.preset.insert({
+                    ["<Up>"] = cmp.mapping(function(fallback) -- delete to allow up key to work in menu
+                        cmp.close()
+                        vim.schedule(function()
+                        local key = vim.api.nvim_replace_termcodes("<C-o>k", true, false, true)
+                        vim.api.nvim_feedkeys(key, "n", false)
+                        end)
+                    end, { "i", "c" }),
+
+                    ["<Down>"] = cmp.mapping(function(fallback) -- delete to allow down key to work in menu
+                        cmp.close()
+                        vim.schedule(function()
+                        local key = vim.api.nvim_replace_termcodes("<C-o>j", true, false, true)
+                        vim.api.nvim_feedkeys(key, "n", false)
+                        end)
+                    end, { "i", "c" }),
+                    ["<C-Space>"] = cmp.mapping.complete(),                -- trigger completion
+                    ["<CR>"]      = cmp.mapping.confirm({ select = true }),-- confirm selection
+                    ["<Tab>"]     = cmp.mapping.select_next_item(),        -- next entry
+                    ["<S-Tab>"]   = cmp.mapping.select_prev_item(),        -- prev entry
+                }),
+
+                sources = cmp.config.sources({
+                    { name = "nvim_lsp" },
+                    { name = "luasnip"  },
+                    { name = "buffer"   },
+                    { name = "path"     },
+                }),
+                experimental = { ghost_text = {hl_group = "Comment", } },
+            })
+
+        -- Allow cmp in cmdline
+        cmp.setup.cmdline(":", {
+            mapping = cmp.mapping.preset.cmdline(),
+            sources = {
+                { name = "cmdline" },
+            },
+        })
+        end,
+    },
+
+    -- Debug Info
+    {
+        "https://git.sr.ht/~whynothugo/lsp_lines.nvim",
+        event = "VeryLazy",
+        config = function()
+            require("lsp_lines").setup()
+            vim.diagnostic.config({
+            virtual_text = false,
+            virtual_lines = { only_current_line = true },
+            })
+        end,
+    },
+
+    -- Display current function information under cursor
+    {
+        "ray-x/lsp_signature.nvim",
+        event = "VeryLazy",
+        opts = {
+            bind = true,
+            handler_opts = { border = "rounded" },
+            floating_window = true,
+            hint_enable = true,
+            hint_prefix = "🐍 ",
+            floating_window_above_cur_line = false,  -- whether to always show above
+        }
     },
 
     -- Scrollbar with debug colouration
@@ -147,5 +246,9 @@ require("lazy").setup({
 
 vim.cmd[[colorscheme tokyonight]]
 require("ibl").setup()
+
+
+
+
 
 
