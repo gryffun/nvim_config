@@ -44,6 +44,8 @@ require("lazy").setup({
                     "c", "c_sharp", "gdscript", "lua", "markdown",
                     "css", "html", "javascript", "python"
                 },
+                sync_install=true,
+                auto_install=true,
                 highlight = { enable = true },
                 indent = { enable = true },
             })
@@ -248,9 +250,3 @@ require("lazy").setup({
 
 vim.cmd[[colorscheme tokyonight]]
 require("ibl").setup()
-
-
-
-
-
-
