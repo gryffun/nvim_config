@@ -156,7 +156,7 @@ require("lazy").setup({
                         local key = vim.api.nvim_replace_termcodes("<C-o>k", true, false, true)
                         vim.api.nvim_feedkeys(key, "n", false)
                         end)
-                    end, { "i", "c" }),
+                    end, { "i" }),
 
                     ["<Down>"] = cmp.mapping(function(fallback) -- delete to allow down key to work in menu
                         cmp.close()
@@ -164,7 +164,7 @@ require("lazy").setup({
                         local key = vim.api.nvim_replace_termcodes("<C-o>j", true, false, true)
                         vim.api.nvim_feedkeys(key, "n", false)
                         end)
-                    end, { "i", "c" }),
+                    end, { "i" }),
                     ["<C-Space>"] = cmp.mapping.complete(),                -- trigger completion
                     ["<CR>"]      = cmp.mapping.confirm({ select = true }),-- confirm selection
                     ["<Tab>"]     = cmp.mapping.select_next_item(),        -- next entry
@@ -211,9 +211,11 @@ require("lazy").setup({
             bind = true,
             handler_opts = { border = "rounded" },
             floating_window = true,
+            floating_window_off_y = -2,
+            max_height = 6,
             hint_enable = true,
-            hint_prefix = "🐍 ",
-            floating_window_above_cur_line = false,  -- whether to always show above
+            hint_prefix = "",
+            floating_window_above_cur_line = true,  -- whether to always show above
         }
     },
 
