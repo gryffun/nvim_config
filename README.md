@@ -1,7 +1,5 @@
 # Lightweight nvim set up
 
-Should autoinstall lazy.nvim to handle plugins. Simply place the contents of this repo in the .config/nvim directory on linux, or %Appdata%/Local/nvim folder on windows
-
 requirements:
 - git (obviously)
 - curl
