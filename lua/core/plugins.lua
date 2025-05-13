@@ -1,8 +1,13 @@
 -- core/plugin.lua
-local parser_path = vim.fn.stdpath("data") .. "/site/parser"
+local parser_path = vim.fn.stdpath("data") .. "/site/parser" --.dlls need installed separatedly it pouints to site/parser but they point to programs/neovim/lib
 vim.opt.rtp:prepend(vim.fn.stdpath("data") .. "/lazy/lazy.nvim")  -- Fixed path resolution
 
 require("lazy").setup({
+    defaults = {
+      -- only load plugins when NOT in VS Code
+      cond = function() return vim.fn.exists('g:vscode') == 0 end,
+    },
+
     -- git plugin for vim
     { "tpope/vim-fugitive" },
     -- adds icons and fonts
@@ -59,9 +64,9 @@ require("lazy").setup({
       require("nvim-treesitter.configs").setup(opts)
     end,
   },
-    
+
     --Lua language addons
-  
+
   {
     "folke/lazydev.nvim",
     ft = "lua", -- only load on lua files
@@ -97,6 +102,7 @@ require("lazy").setup({
     -- Current Line Highlighting
     {
         "nvim-lualine/lualine.nvim",
+        cond = function() return true end,
         config = function()
             require("lualine").setup({
             options={ theme = "tokyonight"}
