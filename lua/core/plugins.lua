@@ -1,5 +1,5 @@
 -- core/plugin.lua
-
+local parser_path = vim.fn.stdpath("data") .. "/site/parser"
 vim.opt.rtp:prepend(vim.fn.stdpath("data") .. "/lazy/lazy.nvim")  -- Fixed path resolution
 
 require("lazy").setup({
@@ -35,22 +35,30 @@ require("lazy").setup({
     },
 
     -- Treesitter is required for current nvim versions
-    {
-        "nvim-treesitter/nvim-treesitter",
-        build = ":TSUpdate",
-        config = function()
-            require("nvim-treesitter.configs").setup({
-                ensure_installed = {
-                    "c", "c_sharp", "gdscript", "lua", "markdown",
-                    "css", "html", "javascript", "python"
-                },
-                sync_install=true,
-                auto_install=true,
-                highlight = { enable = true },
-                indent = { enable = true },
-            })
-        end,
+  {
+    "nvim-treesitter/nvim-treesitter",
+    build = ":TSUpdate",
+    -- during startup, make sure Neovim can see that parser folder
+    init = function()
+      vim.opt.runtimepath:append(parser_path)
+    end,
+    -- these opts get passed into nvim-treesitter.configs.setup()
+    opts = {
+      parser_install_dir = parser_path,
+      ensure_installed = {
+        "c", "c_sharp", "gdscript", "lua", "markdown",
+        "css", "html", "javascript", "python"
+      },
+      sync_install   = true,
+      auto_install   = true,
+      highlight      = { enable = true },
+      indent         = { enable = true },
     },
+    -- standard Lazy.nvim pattern to call setup(opts)
+    config = function(_, opts)
+      require("nvim-treesitter.configs").setup(opts)
+    end,
+  },
     
     --Lua language addons
   
@@ -59,8 +67,6 @@ require("lazy").setup({
     ft = "lua", -- only load on lua files
     opts = {
       library = {
-        -- See the configuration section for more details
-        -- Load luvit types when the `vim.uv` word is found
         { path = "${3rd}/luv/library", words = { "vim%.uv" } },
       },
     },
