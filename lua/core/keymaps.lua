@@ -13,7 +13,8 @@ keymap("n", "<C-h>", "b")
 keymap("n", "<C-l>", "w")
 keymap("n", "<C-j>", "5j")
 keymap("n", "<C-k>", "5k")
-
+keymap("n", "<leader>o", "o<Esc>")
+keymap("n", "<leader>O", "O<Esc>")
 -- Replace symbol in file
 vim.keymap.set('n', '<Leader>r', function()
   local word = vim.fn.expand('<cword>')

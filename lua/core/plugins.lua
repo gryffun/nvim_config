@@ -1,11 +1,12 @@
 -- core/plugin.lua
-local parser_path = vim.fn.stdpath("data") .. "/site/parser" --.dlls need installed separatedly it pouints to site/parser but they point to programs/neovim/lib
-vim.opt.rtp:prepend(vim.fn.stdpath("data") .. "/lazy/lazy.nvim")  -- Fixed path resolution
+local parser_path = vim.fn.stdpath("data") ..
+    "/site/parser"                                               --.dlls need installed separatedly it pouints to site/parser but they point to programs/neovim/lib
+vim.opt.rtp:prepend(vim.fn.stdpath("data") .. "/lazy/lazy.nvim") -- Fixed path resolution
 
 require("lazy").setup({
     defaults = {
-      -- only load plugins when NOT in VS Code
-      cond = function() return vim.fn.exists('g:vscode') == 0 end,
+        -- only load plugins when NOT in VS Code
+        cond = function() return vim.fn.exists('g:vscode') == 0 end,
     },
 
     -- git plugin for vim
@@ -15,10 +16,10 @@ require("lazy").setup({
 
     -- Clean trailing whitespace on save
     {
-    "mcauley-penney/tidy.nvim",
-    opts = {
-        enabled_on_save = true, -- set to false to turn off
-        filetype_exclude = { "markdown", "diff" } -- won't act on these files'
+        "mcauley-penney/tidy.nvim",
+        opts = {
+            enabled_on_save = true,                   -- set to false to turn off
+            filetype_exclude = { "markdown", "diff" } -- won't act on these files'
         },
     },
 
@@ -40,47 +41,48 @@ require("lazy").setup({
     },
 
     -- Treesitter is required for current nvim versions
-  {
-    "nvim-treesitter/nvim-treesitter",
-    build = ":TSUpdate",
-    -- during startup, make sure Neovim can see that parser folder
-    init = function()
-      vim.opt.runtimepath:append(parser_path)
-    end,
-    -- these opts get passed into nvim-treesitter.configs.setup()
-    opts = {
-      parser_install_dir = parser_path,
-      ensure_installed = {
-        "c", "c_sharp", "gdscript", "lua", "markdown",
-        "css", "html", "javascript", "python"
-      },
-      sync_install   = true,
-      auto_install   = true,
-      highlight      = { enable = true },
-      indent         = { enable = true },
+    {
+        "nvim-treesitter/nvim-treesitter",
+        build = ":TSUpdate",
+        -- during startup, make sure Neovim can see that parser folder
+        init = function()
+            vim.opt.runtimepath:append(parser_path)
+        end,
+        -- these opts get passed into nvim-treesitter.configs.setup()
+        opts = {
+            parser_install_dir = parser_path,
+            ensure_installed   = {
+                "c", "c_sharp", "gdscript", "lua", "markdown",
+                "css", "html", "javascript", "python"
+            },
+            sync_install       = true,
+            auto_install       = true,
+            highlight          = { enable = true },
+            indent             = { enable = true },
+        },
+        -- standard Lazy.nvim pattern to call setup(opts)
+        config = function(_, opts)
+            require("nvim-treesitter.configs").setup(opts)
+        end,
     },
-    -- standard Lazy.nvim pattern to call setup(opts)
-    config = function(_, opts)
-      require("nvim-treesitter.configs").setup(opts)
-    end,
-  },
 
     --Lua language addons
 
-  {
-    "folke/lazydev.nvim",
-    ft = "lua", -- only load on lua files
-    opts = {
-      library = {
-        { path = "${3rd}/luv/library", words = { "vim%.uv" } },
-      },
+    {
+        "folke/lazydev.nvim",
+        ft = "lua", -- only load on lua files
+        opts = {
+            library = {
+                { path = "${3rd}/luv/library", words = { "vim%.uv" } },
+            },
+        },
     },
-  },
 
     -- Fuzzy Finder
     {
         "nvim-telescope/telescope.nvim",
         tag = "0.1.8",
+        lazy = false,
         dependencies = { "nvim-lua/plenary.nvim" },
         config = function()
             require("telescope").setup({
@@ -92,7 +94,7 @@ require("lazy").setup({
             })
         end,
         keys = {
-            { "<leader>ff", "<cmd>Telescope find_files<cr>", desc = "Find Files" },
+            { "FF", "<cmd>Telescope find_files<cr>", desc = "Find Files" },
             { "<leader>fg", "<cmd>Telescope live_grep<cr>",  desc = "Live Grep" },
             { "<leader>fb", "<cmd>Telescope buffers<cr>",    desc = "Buffers" },
             { "<leader>fh", "<cmd>Telescope help_tags<cr>",  desc = "Help Tags" },
@@ -105,7 +107,7 @@ require("lazy").setup({
         cond = function() return true end,
         config = function()
             require("lualine").setup({
-            options={ theme = "tokyonight"}
+                options = { theme = "tokyonight" }
             })
         end,
     },
@@ -165,8 +167,8 @@ require("lazy").setup({
                 },
 
                 performance = {
-                    debounce = 0,    -- milliseconds of typing before it refreshes: default 0
-                    throttle = 0,    -- minimum ms between two refreshes: default 0
+                    debounce = 0, -- milliseconds of typing before it refreshes: default 0
+                    throttle = 0, -- minimum ms between two refreshes: default 0
                     fetching_timeout = 100,
                     max_view_entries = 15,
                 },
@@ -178,43 +180,43 @@ require("lazy").setup({
                 },
 
                 mapping = cmp.mapping.preset.insert({
-                    ["<Up>"] = cmp.mapping(function(fallback) -- delete to allow up key to work in menu
+                    ["<Up>"]      = cmp.mapping(function(fallback) -- delete to allow up key to work in menu
                         cmp.close()
                         vim.schedule(function()
-                        local key = vim.api.nvim_replace_termcodes("<C-o>k", true, false, true)
-                        vim.api.nvim_feedkeys(key, "n", false)
+                            local key = vim.api.nvim_replace_termcodes("<C-o>k", true, false, true)
+                            vim.api.nvim_feedkeys(key, "n", false)
                         end)
                     end, { "i" }),
 
-                    ["<Down>"] = cmp.mapping(function(fallback) -- delete to allow down key to work in menu
+                    ["<Down>"]    = cmp.mapping(function(fallback) -- delete to allow down key to work in menu
                         cmp.close()
                         vim.schedule(function()
-                        local key = vim.api.nvim_replace_termcodes("<C-o>j", true, false, true)
-                        vim.api.nvim_feedkeys(key, "n", false)
+                            local key = vim.api.nvim_replace_termcodes("<C-o>j", true, false, true)
+                            vim.api.nvim_feedkeys(key, "n", false)
                         end)
                     end, { "i" }),
-                    ["<C-Space>"] = cmp.mapping.complete(),                -- trigger completion
-                    ["<CR>"]      = cmp.mapping.confirm({ select = true }),-- confirm selection
-                    ["<Tab>"]     = cmp.mapping.select_next_item(),        -- next entry
-                    ["<S-Tab>"]   = cmp.mapping.select_prev_item(),        -- prev entry
+                    ["<C-Space>"] = cmp.mapping.complete(),                 -- trigger completion
+                    ["<CR>"]      = cmp.mapping.confirm({ select = true }), -- confirm selection
+                    ["<Tab>"]     = cmp.mapping.select_next_item(),         -- next entry
+                    ["<S-Tab>"]   = cmp.mapping.select_prev_item(),         -- prev entry
                 }),
 
                 sources = cmp.config.sources({
                     { name = "nvim_lsp" },
-                    { name = "luasnip"  },
-                    { name = "buffer"   },
-                    { name = "path"     },
+                    { name = "luasnip" },
+                    { name = "buffer" },
+                    { name = "path" },
                 }),
-                experimental = { ghost_text = {hl_group = "Comment", } },
+                experimental = { ghost_text = { hl_group = "Comment", } },
             })
 
-        -- Allow cmp in cmdline
-        cmp.setup.cmdline(":", {
-            mapping = cmp.mapping.preset.cmdline(),
-            sources = {
-                { name = "cmdline" },
-            },
-        })
+            -- Allow cmp in cmdline
+            cmp.setup.cmdline(":", {
+                mapping = cmp.mapping.preset.cmdline(),
+                sources = {
+                    { name = "cmdline" },
+                },
+            })
         end,
     },
 
@@ -225,8 +227,8 @@ require("lazy").setup({
         config = function()
             require("lsp_lines").setup()
             vim.diagnostic.config({
-            virtual_text = false,
-            virtual_lines = { only_current_line = true },
+                virtual_text = false,
+                virtual_lines = { only_current_line = true },
             })
         end,
     },
@@ -243,7 +245,7 @@ require("lazy").setup({
             max_height = 6,
             hint_enable = true,
             hint_prefix = "",
-            floating_window_above_cur_line = true,  -- whether to always show above
+            floating_window_above_cur_line = true, -- whether to always show above
         }
     },
 
@@ -267,12 +269,28 @@ require("lazy").setup({
             })
         end,
         -- dependencies = { "folke/tokyonight.nvim" }  -- not necessarily needed if not using colors from tokyonight or have it set up elsewhere
-    }
+    },
+
+    -- Snippet engine
+    {
+      "L3MON4D3/LuaSnip",
+      dependencies = { "rafamadriz/friendly-snippets" },
+      config = function()
+        local ls = require("luasnip")
+        require("luasnip.loaders.from_vscode").lazy_load()
+        vim.keymap.set({ "i", "s" }, "<Tab>", function()
+          if ls.expand_or_jumpable() then ls.expand_or_jump() end
+        end, { silent = true })
+        vim.keymap.set({ "i", "s" }, "<S-Tab>", function()
+          if ls.jumpable(-1) then ls.jump(-1) end
+        end, { silent = true })
+      end,
+    },
 
 })
 
 
 -- non-lsp plugin additional set up
 
-vim.cmd[[colorscheme tokyonight]]
+vim.cmd [[colorscheme tokyonight]]
 require("ibl").setup()
