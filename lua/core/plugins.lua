@@ -7,6 +7,8 @@ require("lazy").setup({
     { "tpope/vim-fugitive" },
     -- adds icons and fonts
     { "nvim-tree/nvim-web-devicons", opts = {} },
+    -- multi line typing
+    { "mg979/vim-visual-multi" }, -- needs some rebinds i think
 
     -- Clean trailing whitespace on save
     {
@@ -65,7 +67,7 @@ require("lazy").setup({
             })
         end,
         keys = {
-            { "<leader>ff", "<cmd>Telescope find_files<cr>", desc = "Find Files" },
+            { "FF", "<cmd>Telescope find_files<cr>", desc = "Find Files" },
             { "<leader>fg", "<cmd>Telescope live_grep<cr>",  desc = "Live Grep" },
             { "<leader>fb", "<cmd>Telescope buffers<cr>",    desc = "Buffers" },
             { "<leader>fh", "<cmd>Telescope help_tags<cr>",  desc = "Help Tags" },
@@ -210,12 +212,19 @@ require("lazy").setup({
         opts = {
             bind = true,
             handler_opts = { border = "rounded" },
-            floating_window = true,
+            floating_window = false,
             floating_window_off_y = -2,
-            max_height = 6,
-            hint_enable = true,
-            hint_prefix = "",
             floating_window_above_cur_line = true,  -- whether to always show above
+            transparancy=50,
+            max_height = 6,
+
+            hint_enable = true,
+            hint_prefix = {
+            above = "↙ ",  -- when the hint is on the line above the current line
+            current = "← ",  -- when the hint is on the same line
+            below = "↖ "  -- when the hint is on the line below the current line
+            },
+            hint_inline=function() return false end,
         }
     },
 
@@ -239,7 +248,15 @@ require("lazy").setup({
             })
         end,
         -- dependencies = { "folke/tokyonight.nvim" }  -- not necessarily needed if not using colors from tokyonight or have it set up elsewhere
-    }
+    },
+
+    -- Side on file list
+    {
+        "nvim-tree/nvim-tree.lua",
+        config = function()
+            require("nvim-tree").setup()
+        end
+    },
 
 })
 
