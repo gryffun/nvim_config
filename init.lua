@@ -7,7 +7,17 @@ vim.g.loaded_netrwPlugin = 1
 -- use system clipboard for copy/paste rather than nvim clipboard
 vim.opt.clipboard = "unnamedplus"
 
--- currently working on setting up lsp stuff
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not vim.loop.fs_stat(lazypath) then
+  vim.fn.system({
+    "git",
+    "clone",
+    "--filter=blob:none",
+    "https://github.com/folke/lazy.nvim.git",
+    lazypath,
+  })
+end
+vim.opt.rtp:prepend(lazypath)
 
 require("core.options")
 require("core.plugins")

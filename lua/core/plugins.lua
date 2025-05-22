@@ -1,8 +1,15 @@
--- core/plugin.lua
 
-vim.opt.rtp:prepend(vim.fn.stdpath("data") .. "/lazy/lazy.nvim")  -- Fixed path resolution
+-- core/plugin.lua
+local parser_path = vim.fn.stdpath("data") ..
+    "/site/parser"                                               --.dlls need installed separatedly it pouints to site/parser but they point to programs/neovim/lib
+vim.opt.rtp:prepend(vim.fn.stdpath("data") .. "/lazy/lazy.nvim") -- Fixed path resolution
 
 require("lazy").setup({
+    defaults = {
+        -- only load plugins when NOT in VS Code
+        cond = function() return vim.fn.exists('g:vscode') == 0 end,
+    },
+
     -- git plugin for vim
     { "tpope/vim-fugitive" },
     -- adds icons and fonts
@@ -36,19 +43,29 @@ require("lazy").setup({
         opts = {},
     },
 
-    -- Treesitter is required for current nvim versions
+    -- Treesitter
     {
         "nvim-treesitter/nvim-treesitter",
         build = ":TSUpdate",
-        config = function()
-            require("nvim-treesitter.configs").setup({
-                ensure_installed = {
-                    "c", "c_sharp", "gdscript", "lua", "markdown",
-                    "css", "html", "javascript", "python"
-                },
-                highlight = { enable = true },
-                indent = { enable = true },
-            })
+        -- during startup, make sure Neovim can see that parser folder
+        init = function()
+            vim.opt.runtimepath:append(parser_path)
+        end,
+        -- these opts get passed into nvim-treesitter.configs.setup()
+        opts = {
+            parser_install_dir = parser_path,
+            ensure_installed   = {
+                "c", "c_sharp", "gdscript", "lua", "markdown",
+                "css", "html", "javascript", "python"
+            },
+            sync_install       = true,
+            auto_install       = true,
+            highlight          = { enable = true },
+            indent             = { enable = true },
+        },
+        -- standard Lazy.nvim pattern to call setup(opts)
+        config = function(_, opts)
+            require("nvim-treesitter.configs").setup(opts)
         end,
     },
 
@@ -258,6 +275,33 @@ require("lazy").setup({
         end
     },
 
+    {
+        "folke/lazydev.nvim",
+        ft = "lua", -- only load on lua files
+        opts = {
+            library = {
+                { path = "${3rd}/luv/library", words = { "vim%.uv" } },
+            },
+        },
+    },
+
+    -- Snippet engine
+    {
+      "L3MON4D3/LuaSnip",
+      dependencies = { "rafamadriz/friendly-snippets" },
+      config = function()
+        local ls = require("luasnip")
+        require("luasnip.loaders.from_vscode").lazy_load()
+        vim.keymap.set({ "i", "s" }, "<Tab>", function()
+          if ls.expand_or_jumpable() then ls.expand_or_jump() end
+        end, { silent = true })
+        vim.keymap.set({ "i", "s" }, "<S-Tab>", function()
+          if ls.jumpable(-1) then ls.jump(-1) end
+        end, { silent = true })
+      end,
+    },
+
+
 })
 
 
@@ -265,9 +309,6 @@ require("lazy").setup({
 
 vim.cmd[[colorscheme tokyonight]]
 require("ibl").setup()
-
-
-
 
 
 
