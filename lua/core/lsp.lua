@@ -29,7 +29,7 @@ M.on_attach = function(_, bufnr)
   nmap("K",  vim.lsp.buf.hover,            "Hover Documentation")
   nmap("<leader>rn", vim.lsp.buf.rename,   "[R]e[n]ame Symbol")
   nmap("<leader>ca", vim.lsp.buf.code_action, "[C]ode [A]ction")
-  nmap("<leader>F", vim.lsp.buf.format,    "[F]ormat Buffer")
+  nmap("<leader>f", vim.lsp.buf.format,    "[F]ormat Buffer")
 end
 
 -- add cmp_nvim_lsp capabilities

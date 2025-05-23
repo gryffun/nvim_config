@@ -80,6 +80,12 @@ require("lazy").setup({
                     layout_config = { prompt_position = "top" },
                     sorting_strategy = "ascending",
                     winblend = 10,
+                    file_ignore_patterns = { 
+                      "%.meta$",
+                      "%.sample$",
+                      ".git/*"
+                   },
+                   respect_gitignore = true,
                 }
             })
         end,
