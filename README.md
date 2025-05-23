@@ -17,6 +17,10 @@ Neovim plugins are manages with [lazy.nvim](https://github.com/folke/lazy.nvim) 
 
 Treesitter configures its parsers to a direcory outside the normal "lazy" folder things are installed to in this config. This is just because I was having some troubles in windows with treesitter and wanted the parsers separate. It installs the .so/dll to the nvim-data/site/parsers (which on linux is just nvim in .local/share).
 
+### Formatter
+ There is a formatter installed for your scripts, but this won't run right off the bat. You need to install them, and know which ones you want installed. These are configured in plugins.lua under "stevearc/conform.nvim". You can change these to any supported by Mason as far as I know. They have to be changed in plugin.lua. Then ensure they are installed. To install it type :Mason in Neovim and go to the [5th tab][# "Hit 5 on your keyboard with Mason's UI open"]. Then go down the list and find the ones you want to use.
+
+
 ## Linux (and probably Mac) Config
 
 Should just work with some luck if you're using Linux. Just cd to .config for your user and run:

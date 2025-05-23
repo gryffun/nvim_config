@@ -16,6 +16,20 @@ require("lazy").setup({
     { "nvim-tree/nvim-web-devicons", opts = {} },
     -- multi line typing
     { "mg979/vim-visual-multi" }, -- needs some rebinds i think
+    -- view assembly Code compiled from c langs
+    {'krady21/compiler-explorer.nvim'},
+
+
+    -- Text wrapping for signs like "" or ()
+    {
+        "doums/tenaille.nvim",
+        config=function()
+            require("tenaille").setup({
+                default_mapping=false,
+            })
+        end
+    },
+
 
     -- Clean trailing whitespace on save
     {
@@ -55,7 +69,7 @@ require("lazy").setup({
         opts = {
             parser_install_dir = parser_path,
             ensure_installed   = {
-                "c", "c_sharp", "gdscript", "lua", "markdown",
+                "c", "c_sharp", "lua", "markdown",
                 "css", "html", "javascript", "python"
             },
             sync_install       = true,
@@ -305,6 +319,50 @@ require("lazy").setup({
           if ls.jumpable(-1) then ls.jump(-1) end
         end, { silent = true })
       end,
+    },
+
+
+    -- Better formatting for different languages
+    -- Use the vim cmd ":Mason" and press 5 in its menu and download these formatters if you want to use them
+    {
+        "stevearc/conform.nvim",
+        event = { "BufReadPre", "BufNewFile" },
+        config = function()
+            local conform = require("conform")
+
+            conform.setup({
+            formatters_by_ft = {
+                c= { "clang-format" },
+                cpp= { "clang-format" },
+                javascript = { "prettier" },
+                typescript = { "prettier" },
+                javascriptreact = { "prettier" },
+                typescriptreact = { "prettier" },
+                svelte = { "prettier" },
+                css = { "prettier" },
+                html = { "prettier" },
+                json = { "prettier" },
+                yaml = { "prettier" },
+                markdown = { "prettier" },
+                graphql = { "prettier" },
+                lua = { "stylua" },
+                python = { "isort", "black" },
+            },
+            format_on_save = {
+                lsp_fallback = true,
+                async = false,
+                timeout_ms = 500,
+            },
+            })
+
+            vim.keymap.set({ "n", "v" }, "<leader>mp", function()
+            conform.format({
+                lsp_fallback = true,
+                async = false,
+                timeout_ms = 500,
+            })
+            end, { desc = "Format file or range (in visual mode)" })
+        end,
     },
 
 

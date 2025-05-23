@@ -17,6 +17,20 @@ keymap("n", "<C-k>", "5k")
 keymap("n", "<leader>o", "o<Esc>")
 keymap("n", "<leader>O", "O<Esc>")
 
+
+-- For easier text wrapping
+local wrap = require('tenaille').wrap
+
+vim.keymap.set('v', '"', function() wrap({ '"', '"' }) end)
+vim.keymap.set('v', "'", function() wrap({ "'", "'" }) end)
+vim.keymap.set('v', '`', function() wrap({ '`', '`' }) end)
+vim.keymap.set('v', '(', function() wrap({ '(', ')' }) end)
+vim.keymap.set('v', '[', function() wrap({ '[', ']' }) end)
+vim.keymap.set('v', '{', function() wrap({ '{', '}' }) end)
+vim.keymap.set('v', '<', function() wrap({ '<', '>' }) end)
+
+
+
 -- Replace symbol in file
 vim.keymap.set('n', '<Leader>r', function()
   local word = vim.fn.expand('<cword>')
