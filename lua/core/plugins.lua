@@ -324,8 +324,13 @@ require("lazy").setup({
         event = { "BufReadPre", "BufNewFile" },
         config = function()
             local conform = require("conform")
-
             conform.setup({
+            formatters = {
+                ["clang-format"] = {
+                    prepend_args = { "-style={ BasedOnStyle: LLVM, IndentWidth: 4, TabWidth: 4, BreakBeforeBraces: Allman }",
+                    },
+                },
+            },
             formatters_by_ft = {
                 c= { "clang-format" },
                 cpp= { "clang-format" },

@@ -90,3 +90,7 @@ Init.lua is looked for inside:<br>
 and the data is stored at:<br>
 **[~](# "Hint: If you didn't know, this is a shorthand for user home.")/.local/share/nvim**
 
+### Useful copy/pastes
+
+For if you're on linux and don't have a .local or .config. Useful if on containers. cd to your home and then:
+<pre> mkdir .config && mkdir -p .local/share/nvim </pre>
