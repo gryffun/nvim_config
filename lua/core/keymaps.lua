@@ -16,7 +16,11 @@ keymap("n", "<C-j>", "5j")
 keymap("n", "<C-k>", "5k")
 keymap("n", "<leader>o", "o<Esc>")
 keymap("n", "<leader>O", "O<Esc>")
-
+keymap("n", "<leader>ff", "<cmd>Telescope find_files<cr>")
+keymap("n", "<leader>fg", "<cmd>Telescope live_grep<cr>")
+keymap("n", "<leader>fb", "<cmd>Telescope buffers<cr>")
+keymap("n", "<leader>fh", "<cmd>Telescope help_tags<cr>")
+keymap("n", "<leader><C-f>", "<cmd>NvimTreeOpen<cr>")
 
 -- For easier text wrapping
 local wrap = require('tenaille').wrap
@@ -28,8 +32,6 @@ vim.keymap.set('v', '(', function() wrap({ '(', ')' }) end)
 vim.keymap.set('v', '[', function() wrap({ '[', ']' }) end)
 vim.keymap.set('v', '{', function() wrap({ '{', '}' }) end)
 vim.keymap.set('v', '<', function() wrap({ '<', '>' }) end)
-
-
 
 -- Replace symbol in file
 vim.keymap.set('n', '<Leader>r', function()
@@ -49,8 +51,3 @@ vim.keymap.set(
   { desc = "Toggle lsp_lines" }
 )
 
-
-vim.keymap.set("n", "<leader><C-f>", function()
-  vim.cmd(":NvimTreeOpen")
-end
-)
