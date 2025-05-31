@@ -3,7 +3,7 @@
 local opt = vim.opt
 
 opt.number = true          -- show line numbers
-opt.relativenumber = false -- relative line numbers
+opt.relativenumber = true -- relative line numbers
 opt.tabstop = 4            -- 4 spaces per tab
 opt.shiftwidth = 4         -- indentation levels
 opt.expandtab = true       -- convert tabs to spaces

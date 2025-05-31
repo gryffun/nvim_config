@@ -36,7 +36,7 @@ local caps = vim.lsp.protocol.make_client_capabilities()
 caps = require("cmp_nvim_lsp").default_capabilities(caps)
 
 local servers = {
-  "lua_ls", "pyright", "ts_ls", "omnisharp", "html", "cssls",
+  "lua_ls", "pyright", "ts_ls", "omnisharp", "html", "cssls", "clangd"
 }
 
 require("mason").setup()
@@ -76,7 +76,17 @@ for _, name in ipairs(servers) do
     }
     opts.root_dir = util.root_pattern("project.godot", "*.sln")
   end
-
+  if name == "clangd" then
+    opts.root_dir = util.root_pattern("compile_commands.json", ".clangd", ".git")
+    opts.cmd = {
+      "clangd",
+      "--compile-commands-dir=build",
+      "--background-index",
+      "--clang-tidy",
+      "--completion-style=detailed",
+      "--header-insertion=never"
+    }
+  end
   lspconfig[name].setup(opts)
 end
 

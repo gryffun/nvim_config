@@ -105,6 +105,14 @@ require("lazy").setup({
             })
         end,
     },
+    {'junegunn/fzf'}, -- fzf syntax
+
+    -- Telescope add on for better grep (faster and with support for fzf syntax)
+    {
+    'nvim-telescope/telescope-fzf-native.nvim',
+    build = 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release'
+    },
+
 
     -- Current Line Highlighting
     {
@@ -307,7 +315,7 @@ require("lazy").setup({
       config = function()
         local ls = require("luasnip")
         require("luasnip.loaders.from_vscode").lazy_load()
-        vim.keymap.set({ "i", "s" }, "<Tab>", function()
+        vim.keymap.set({ "i", "s" }, "<C-Tab>", function()
           if ls.expand_or_jumpable() then ls.expand_or_jump() end
         end, { silent = true })
         vim.keymap.set({ "i", "s" }, "<S-Tab>", function()

@@ -20,9 +20,12 @@ keymap("n", "<leader>ff", "<cmd>Telescope find_files<cr>")
 keymap("n", "<leader>fg", "<cmd>Telescope live_grep<cr>")
 keymap("n", "<leader>fb", "<cmd>Telescope buffers<cr>")
 keymap("n", "<leader>fh", "<cmd>Telescope help_tags<cr>")
+keymap("n", "<leader>fs", "<cmd>Telescope current_buffer_fuzzy_find<cr>") -- search file for word
 keymap("n", "<leader><C-f>", "<cmd>NvimTreeOpen<cr>")
 keymap("n", "<leader><C-x>", "<cmd>NvimTreeClose<cr>")
-
+keymap("n", "<leader><C-t>", "<cmd>tabnew<cr>")
+keymap("n", "<leader><C-l>", "<cmd>tabn<cr>")
+keymap("n", "<leader><C-h>", "<cmd>tabp<cr>")
 -- For easier text wrapping
 local wrap = require('tenaille').wrap
 
