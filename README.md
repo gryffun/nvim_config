@@ -1,4 +1,5 @@
-# Lightweight nvim set up
+# Truly EPIC nvim set up
+(idc what u say i have fun makin it)
 
 ## Notes
 
@@ -114,7 +115,11 @@ Its important to have this installed for the language you're editing. This is ha
 
 Debug Adapter Protocols (DAP) can also be installed through :Mason. I don't currently use this in Neovim so there is no set up in this config for it. I may include this in future, in which case you won't see this. If you want to set it up yourself I recommend going to [nvim-dap](https://github.com/mfussenegger/nvim-dap) and following its documentation.
 
+Linters are useful because they enforce standards in code. I have no standards so I don't use them. Seriously tho I haven't installed one cause they get in my way in this set up and I get a lot of the main functionality I want from this config anyway. If you want to set it up for yourself you can use [none-ls.nvim](https://github.com/nvimtools/none-ls.nvim). I'm not entirely sure how to go about setting it up but I'm sure the documentation is fine for it probably maybe.
+
 Formatters will determine if your language will be formatted on save. Again, you need to know which ones you need and these can be installed through [Mason](https://github.com/mason-org/mason.nvim). A list of ones which are to be used can be found either in the :Mason tab 5 or at the [conform.nvim](https://github.com/stevearc/conform.nvim) formatters section. This is the nvim package this config uses too conveniently. If you want to add more formatters and are using this config that plugin is located in lua/core/plugins.lua and just add it to the list that is already there in the same format.
+
+
 
 ### Useful copy/pastes
 

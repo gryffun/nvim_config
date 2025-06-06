@@ -4,6 +4,7 @@ local parser_path = vim.fn.stdpath("data") ..
     "/site/parser"                                               --.dlls need installed separatedly it pouints to site/parser but they point to programs/neovim/lib
 vim.opt.rtp:prepend(vim.fn.stdpath("data") .. "/lazy/lazy.nvim") -- Fixed path resolution
 
+
 require("lazy").setup({
     defaults = {
         -- only load plugins when NOT in VS Code
@@ -44,8 +45,14 @@ require("lazy").setup({
     {
         "folke/tokyonight.nvim",
         lazy = false,
-        priority = 1000,
+        priority = 10,
         opts = {},
+    },
+
+    {
+        "sainnhe/everforest",
+        lazy = false,
+        priority = 1000,
     },
 
     -- Indent lines and current scope highlighting
@@ -147,92 +154,134 @@ require("lazy").setup({
         end,
     },
 
-    -- Autocomplete with function information
-    {
-        "hrsh7th/nvim-cmp",
-        event = "InsertEnter",
-        dependencies = {
-            "hrsh7th/cmp-nvim-lsp",
-            "hrsh7th/cmp-buffer",
-            "hrsh7th/cmp-path",
-            "hrsh7th/cmp-cmdline",
-            "L3MON4D3/LuaSnip",
-            "saadparwaiz1/cmp_luasnip",
+
+  -- CMP for autocomplete + sources + LuaSnip integration
+  {
+    "hrsh7th/nvim-cmp",
+    event = "InsertEnter",
+    dependencies = {
+      "hrsh7th/cmp-nvim-lsp",
+      "hrsh7th/cmp-buffer",
+      "hrsh7th/cmp-path",
+      "hrsh7th/cmp-cmdline",
+      "L3MON4D3/LuaSnip",
+      "saadparwaiz1/cmp_luasnip", -- include snippets
+      "rafamadriz/friendly-snippets", -- include vscode snippets
+    },
+    config = function()
+      local cmp = require("cmp")
+      local ls = require("luasnip")
+
+      -- Load VSCode snippets from friendly-snippets
+      require("luasnip.loaders.from_vscode").lazy_load()
+
+      -- Load your own Lua snippets directory (adjust this path)
+      local snippet_dir = vim.fn.stdpath("config") .. "/lua/core/snippets" -- If on windows maybe change the / to \\
+      require("luasnip.loaders.from_lua").lazy_load({ paths = { snippet_dir } })
+
+      -- CMP setup
+      cmp.setup({
+        snippet = {
+          expand = function(args)
+            ls.lsp_expand(args.body)
+          end,
         },
-        config = function()
-            local cmp = require("cmp")
-            local luasnip = require("luasnip")
+        mapping = cmp.mapping.preset.insert({
+            ["<Up>"] = cmp.mapping(function(fallback) -- delete to allow up key to work in menu
+                cmp.close()
+                vim.schedule(function()
+                local key = vim.api.nvim_replace_termcodes("<C-o>k", true, false, true)
+                vim.api.nvim_feedkeys(key, "n", false)
+                end)
+            end, { "i" }),
 
-            cmp.setup({
-                window = {
-                    completion = {
-                        border = "", -- pretty border
-                        max_width = 80,
-                        max_height = 8,
-                        scrollbar = false,
-                    },
-                    documentation = {
-                        border = "", -- pretty border
-                        max_width = 80,
-                        max_height = 15,
-                    },
-                },
+            ["<Down>"] = cmp.mapping(function(fallback) -- delete to allow down key to work in menu
+                cmp.close()
+                vim.schedule(function()
+                local key = vim.api.nvim_replace_termcodes("<C-o>j", true, false, true)
+                vim.api.nvim_feedkeys(key, "n", false)
+                end)
+            end, { "i" }),
 
-                performance = {
-                    debounce = 0,    -- milliseconds of typing before it refreshes: default 0
-                    throttle = 0,    -- minimum ms between two refreshes: default 0
-                    fetching_timeout = 100,
-                    max_view_entries = 15,
-                },
+            ["<C-Space>"] = cmp.mapping.complete(),                 -- trigger completion
+            ["<CR>"]      = cmp.mapping.confirm({ select = true }), -- confirm selection
+            ["<Tab>"] = cmp.mapping(function(fallback)
+                if cmp.visible() then
+                    cmp.select_next_item()
+                elseif ls.expand_or_jumpable() then
+                    ls.expand_or_jump()
+                else
+                    fallback()
+                end
+            end, { "i", "s" }),
 
-                snippet = {
-                    expand = function(args)
-                        luasnip.lsp_expand(args.body)
-                    end,
-                },
+            ["<S-Tab>"] = cmp.mapping(function(fallback)
+                if cmp.visible() then
+                    cmp.select_prev_item()
+                elseif ls.jumpable(-1) then
+                    ls.jump(-1)
+                else
+                    fallback()
+                end
+            end, { "i", "s" }),
 
-                mapping = cmp.mapping.preset.insert({
-                    ["<Up>"] = cmp.mapping(function(fallback) -- delete to allow up key to work in menu
-                        cmp.close()
-                        vim.schedule(function()
-                        local key = vim.api.nvim_replace_termcodes("<C-o>k", true, false, true)
-                        vim.api.nvim_feedkeys(key, "n", false)
-                        end)
-                    end, { "i" }),
-
-                    ["<Down>"] = cmp.mapping(function(fallback) -- delete to allow down key to work in menu
-                        cmp.close()
-                        vim.schedule(function()
-                        local key = vim.api.nvim_replace_termcodes("<C-o>j", true, false, true)
-                        vim.api.nvim_feedkeys(key, "n", false)
-                        end)
-                    end, { "i" }),
-                    ["<C-Space>"] = cmp.mapping.complete(),                -- trigger completion
-                    ["<CR>"]      = cmp.mapping.confirm({ select = true }),-- confirm selection
-                    ["<Tab>"]     = cmp.mapping.select_next_item(),        -- next entry
-                    ["<S-Tab>"]   = cmp.mapping.select_prev_item(),        -- prev entry
-                }),
-
-                sources = cmp.config.sources({
-                    { name = "nvim_lsp" },
-                    { name = "luasnip"  },
-                    { name = "buffer"   },
-                    { name = "path"     },
-                }),
-                experimental = { ghost_text = {hl_group = "Comment", } },
-            })
+        }),
+        sources = cmp.config.sources({
+            { name = "nvim_lsp", priority=750 },
+            { name = "luasnip", priority=1000  },
+            { name = "buffer", priority=500   },
+            { name = "path", priority = 250    },
+        }),
+        window = {
+            completion = {
+            border = "",  max_width = 80, max_height = 8, scrollbar = false,
+            },
+            documentation = {
+            border = "",  max_width = 80, max_height = 15,
+            },
+        },
+        performance = {
+            debounce = 0,
+            throttle = 0,
+            fetching_timeout = 100,
+            max_view_entries = 15,
+        },
+        experimental = {
+            ghost_text = { hl_group = "Conceal" },
+        },
+        })
 
         -- Allow cmp in cmdline
-        cmp.setup.cmdline(":", {
+        cmp.setup.cmdline({ '/', '?' }, {
             mapping = cmp.mapping.preset.cmdline(),
             sources = {
-                { name = "cmdline" },
+                { name = 'buffer' }
+            }
+        })
+        cmp.setup.cmdline(':', {
+            mapping = cmp.mapping.preset.cmdline(),
+            sources = cmp.config.sources({
+                { name = 'path', option = {trailing_slash = true}, }
+            }, {
+                    { name = 'cmdline' , option = {treat_trailing_slash =false}}
+                }),
+            matching = { disallow_symbol_nonprefix_matching = false }
+        })
+        cmp.setup.filetype("tex", {
+            sources = {
+                { name = 'vimtex'},
+                { name = 'luasnip' },
+                { name = 'buffer'},
             },
         })
-        end,
+    end,
     },
 
-    -- Debug Info
+
+
+
+
+        -- Debug Info
     {
         "https://git.sr.ht/~whynothugo/lsp_lines.nvim",
         event = "VeryLazy",
@@ -308,22 +357,6 @@ require("lazy").setup({
         },
     },
 
-    -- Snippet engine
-    {
-      "L3MON4D3/LuaSnip",
-      dependencies = { "rafamadriz/friendly-snippets" },
-      config = function()
-        local ls = require("luasnip")
-        require("luasnip.loaders.from_vscode").lazy_load()
-        vim.keymap.set({ "i", "s" }, "<C-Tab>", function()
-          if ls.expand_or_jumpable() then ls.expand_or_jump() end
-        end, { silent = true })
-        vim.keymap.set({ "i", "s" }, "<S-Tab>", function()
-          if ls.jumpable(-1) then ls.jump(-1) end
-        end, { silent = true })
-      end,
-    },
-
 
     -- Better formatting for different languages
     -- Use the vim cmd ":Mason" and press 5 in its menu and download these formatters if you want to use them
@@ -379,7 +412,7 @@ require("lazy").setup({
 
 -- non-lsp plugin additional set up
 
-vim.cmd[[colorscheme tokyonight]]
+vim.cmd[[colorscheme everforest]] -- change to tokyonights if u want. I like to mix it up every now n then
 require("ibl").setup()
 
 
