@@ -29,8 +29,8 @@ return {
         },
         fmta(
             [[
-            {
             SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
+            {
             SDL_SetAppMetadata("<>", "<>", "<>");
             // Check SDL can initialise
             if (!SDL_Init(SDL_INIT_VIDEO))

@@ -1,21 +1,26 @@
-# Truly EPIC nvim set up
+# Fun Funny Fun Neovim Config
 (idc what u say i have fun makin it)
 
 ## Notes
 
+This is my personal Neovim config as it grows over time. It also has some tips and things I learned along the way. I recommend reading this if you're planning on using this config or if you're really new to Neovim it might be good for reference too.
+
 Dependencies for install (that I can remember):
 
-- git (obviously)
-- curl
-- openssl
-- tar
-- gcc or some other c compiler
-- libstdc++ / libstdc++6
-- npm (for node)
-- node (for treesitter)
-- [ripgrep](https://github.com/BurntSushi/ripgrep?tab=readme-ov-file) (optional but recommended for telescope to work)
-- cmake
-  Run the appropriate commands for these for your OS.
+| OS                  | Install Command Prefix                           | Packages                                                                 |
+| ------------------- | ------------------------------------------------ | ------------------------------------------------------------------------ |
+| **Ubuntu / Debian** | `sudo apt-get update && sudo apt-get install -y` | git curl openssl tar build-essential libstdc++6 npm nodejs ripgrep cmake |
+| **Fedora / RHEL**   | `sudo dnf install -y` (or `yum`)                 | git curl openssl tar libstdc++ npm nodejs ripgrep cmake          	    |
+| **macOS**           | `brew install`                                   | git curl openssl tar libstdc++ npm node ripgrep cmake                    |
+| **Arch Linux**      | `sudo pacman -Syu`                               | git curl openssl tar libstdc++ npm nodejs ripgrep cmake                  |
+
+
+If you're on Windows you need the same but installing it might be less clear in some cases (e.g. ripgrep) and I can't member. I run **winget install** then the packages, but some of them might not be found. You should probably just fix the dependencies as they become an issue in that case. Here are the links to things which might be different though:
+- [ripgrep](https://github.com/BurntSushi/ripgrep) for Telescope Live Grep
+- [cmake](https://cmake.org/) to build some of the plugins
+
+
+You also **need a c compiler** like gcc or clang.
 
 Neovim plugins are manages with [lazy.nvim](https://github.com/folke/lazy.nvim) for this config.
 
@@ -25,11 +30,15 @@ Treesitter configures its parsers to a direcory outside the normal "lazy" folder
 
 There is a formatter installed for your scripts, but this won't run right off the bat. You need to install them, and know which ones you want installed. These are configured in plugins.lua under "stevearc/conform.nvim". You can change these to any supported by Mason as far as I know. They have to be changed in plugin.lua. Then ensure they are installed. To install it type :Mason in Neovim and go to the [5th tab](# "Hit 5 on your keyboard with Mason's UI open"). Then go down the list and find the ones you want to use.
 
+
+
 ## Linux (and probably Mac) Config
 
 Should just work with some luck if you're using Linux. Just cd to .config for your user and run:
 
 <pre> git clone https://github.com/gryffun/nvim_config nvim </pre>
+
+
 
 ## Windows Config
 
@@ -60,17 +69,36 @@ The best way around this I have managed to find is compiling the parsers with [T
 
 5. Then you need to run (replacing the link with your information): <pre> tree-sitter build %AppData%\Local\nvim-data\site\parser\parser\the_language_name_in_lowecase.dll . </pre>
 
+----
+
 ## Linking Unity (if you like that kind of thing)
 
-Unity does not support Neovim.
+Unity does not support Neovim by default.
 
-There may be convoluted ways to set it up so that you get all the functionality and integration of the supported IDEs but the easiest way I have found is to use [VSCode Neovim](https://github.com/vscode-neovim/vscode-neovim).
+There may be other convoluted ways to set it up so that you get all the functionality and integration of the supported IDEs but I've found 2 ways.
 
-This is available as an extension on VSCode and then all you have to do is set it to your External Script Editor. That's in:
+I use option 2 which links to another git repo by me.
 
+### Option 1
+
+One is to use VSCode as an intermediate between Neovim and Unity using[VSCode Neovim](https://github.com/vscode-neovim/vscode-neovim).
+This is available as an extension on VSCode.
+Then all you have to do is set it to your External Script Editor. That's in:
 > Edit/Preferences/External Tools
 
 This nvim set up is configured so that it should work with VSCode out of the box, but if you have a custom init.lua it may not. Certain plugins need to be disabled to work well with VSCode, so bear that in mind. You might have to read some [VSCode Neovim](https://github.com/vscode-neovim/vscode-neovim) documentation to figure out what can and can't work.
+
+### Option 2
+
+If you're on windows use [my Neovim launcher](https://github.com/gryffun/unity-neovim-launcher) or something like it. I didn't find any better solutions myself while looking. A better explanation of how it works is on that git. 
+
+You can also make your own and I have some information there on what the problems are you have to solve. Its not very hard once all the problems are understood, but be aware there are some hoops to jump through to get unity to pass the right information if you want to go that route.
+
+I haven't configured it for Linux yet but I suspect that a .sh will probably work instead of an exe which is required on windows.
+Here is another resource where someone does something similar for Godot on Linux: [nvim-godot](https://github.com/niscolas/nvim-godot).
+If you want to make it for Linux I recommend looking at my launcher just to see what problems I had to solve so you're aware of what similar things you might encounter.
+
+-----
 
 ## Hints for Noobs (and me if I forget something :P)
 

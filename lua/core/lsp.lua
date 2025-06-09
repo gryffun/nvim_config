@@ -69,9 +69,10 @@ for _, name in ipairs(servers) do
   end
 
   if name == "omnisharp" then
+     -- argument: "hostPID" tostring(vim.fn.getpid()) removed in opts.cmd as causes unity to return nil value on opening nvim. 
+     -- Add back in if using multiple nvim instances and need instance unique omnisharp servers 
     opts.cmd = {
-      "omnisharp", "--languageserver", "--hostPID",
-      tostring(vim.fn.getpid()),
+      "omnisharp", "--languageserver",
       "--solution-path", util.root_pattern("*.sln")(vim.fn.getcwd()),
     }
     opts.root_dir = util.root_pattern("project.godot", "*.sln")
@@ -89,5 +90,15 @@ for _, name in ipairs(servers) do
   end
   lspconfig[name].setup(opts)
 end
+
+-- shutdown servers on close instance
+vim.api.nvim_create_autocmd("VimLeavePre", {
+  callback = function()
+    for _, client in pairs(vim.lsp.get_active_clients()) do
+      client.stop(true)  -- force shutdown
+    end
+  end
+})
+
 
 return M
