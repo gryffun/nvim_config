@@ -73,7 +73,7 @@ for _, name in ipairs(servers) do
      -- Add back in if using multiple nvim instances and need instance unique omnisharp servers 
     opts.cmd = {
       "omnisharp", "--languageserver",
-      "--solution-path", util.root_pattern("*.sln")(vim.fn.getcwd()),
+      "--solution-path", util.root_pattern("*.csproj", "*.sln", "omnisharp.json")(vim.fn.getcwd()),
     }
     opts.settings = {
       omnisharp = {
@@ -87,7 +87,7 @@ for _, name in ipairs(servers) do
     opts.flags = {
         debounce_text_changes = 150,
       }
-    opts.root_dir = util.root_pattern("*.csproj", "*.sln")
+    opts.root_dir = util.root_pattern("*.csproj", "*.sln", "omnisharp.json")
   end
   if name == "clangd" then
     opts.root_dir = util.root_pattern("compile_commands.json", ".clangd", ".git")

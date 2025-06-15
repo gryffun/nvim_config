@@ -173,9 +173,7 @@ require("lazy").setup({
 
             -- Load VSCode snippets from friendly-snippets
             -- Can improve this to be language agnostic and load tables for current lang maybe
-            require("luasnip.loaders.from_vscode").lazy_load({
-                include = {"csharp", "unity"}
-            })
+            require("luasnip.loaders.from_vscode").lazy_load()
 
             -- Load your own Lua snippets directory (adjust this path)
             local snippet_dir = vim.fn.stdpath("config") ..

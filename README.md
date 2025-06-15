@@ -154,3 +154,15 @@ Formatters will determine if your language will be formatted on save. Again, you
 For if you're on linux and don't have a .local or .config. Useful if on containers. cd to your home and then:
 
 <pre> mkdir .config && mkdir -p .local/share/nvim </pre>
+
+
+## TODOs
+[] Enforce project type checking for loading project specific snippets
+[] Add snippets for Godot
+[x] Add snippets for Unity
+[] Expand SDL_3 snippets
+[] Add snippets for love2d
+[] Add checks on snippets to make sure there are no import repetitions (e.g. #include, using)
+[] Include html snippets
+[] Include CSS snippets
+[] Reduce multi-instance LSP server errors
