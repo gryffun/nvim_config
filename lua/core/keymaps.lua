@@ -43,16 +43,6 @@ keymap('n', '<Leader>r', function()
   vim.cmd("normal! `z") -- jump back to mark
 end, { noremap=true, silent=true })
 
-
--- Disable lsp-lines when its annoying (need a different plugin tbh)
-keymap(
-  "",
-  "<Leader>l",
-  require("lsp_lines").toggle,
-  { desc = "Toggle lsp_lines" }
-)
-
-
 -- Move tabs with wrap around
 keymap("n", "<C-l>", function()
   local current = vim.fn.tabpagenr()

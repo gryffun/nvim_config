@@ -33,7 +33,7 @@ return {
             {
             SDL_SetAppMetadata("<>", "<>", "<>");
             // Check SDL can initialise
-            if (!SDL_Init(SDL_INIT_VIDEO))
+            if (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO))
             {
             // if cant init video, return error
             SDL_Log("Couldnt init SDL: %s", SDL_GetError());
@@ -84,9 +84,13 @@ return {
             desc = "Basic template for SDL_AppQuit"
         },
         {
-            t({"void SDL_AppQuit(void *appstate, SDL_AppResult result) {}"})
+            t({
+            "void SDL_AppQuit(void *appstate, SDL_AppResult result)",
+            "{",
+            "    /* SDL will clean up the window/renderer for us. */",
+            "}"
+            })
         }
-
     ),
 
     s(

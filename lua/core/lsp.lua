@@ -75,7 +75,19 @@ for _, name in ipairs(servers) do
       "omnisharp", "--languageserver",
       "--solution-path", util.root_pattern("*.sln")(vim.fn.getcwd()),
     }
-    opts.root_dir = util.root_pattern("project.godot", "*.sln")
+    opts.settings = {
+      omnisharp = {
+            RoslynExtensionsOptions = {
+                EnableAnalyzersSupport = true,
+                EnableEditorConfigSupport = true,
+                EnableImportCompletion = true,
+              },
+          },
+      }
+    opts.flags = {
+        debounce_text_changes = 150,
+      }
+    opts.root_dir = util.root_pattern("*.csproj", "*.sln")
   end
   if name == "clangd" then
     opts.root_dir = util.root_pattern("compile_commands.json", ".clangd", ".git")

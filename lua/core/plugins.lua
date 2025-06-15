@@ -3,7 +3,7 @@ local parser_path = vim.fn.stdpath("data") ..
     "/site/parser"                                               --.dlls need installed separatedly it pouints to site/parser but they point to programs/neovim/lib
 vim.opt.rtp:prepend(vim.fn.stdpath("data") .. "/lazy/lazy.nvim") -- Fixed path resolution
 
-local colour_theme = "everforest" -- change to tokyonights or whatever if u want. I like to mix it up every now n then
+local colour_theme = "tokyonight" -- change to tokyonights or whatever if u want. I like to mix it up every now n then
 
 require("lazy").setup({
     defaults = {
@@ -172,7 +172,10 @@ require("lazy").setup({
             local ls = require("luasnip")
 
             -- Load VSCode snippets from friendly-snippets
-            require("luasnip.loaders.from_vscode").lazy_load()
+            -- Can improve this to be language agnostic and load tables for current lang maybe
+            require("luasnip.loaders.from_vscode").lazy_load({
+                include = {"csharp", "unity"}
+            })
 
             -- Load your own Lua snippets directory (adjust this path)
             local snippet_dir = vim.fn.stdpath("config") ..
@@ -243,7 +246,7 @@ require("lazy").setup({
                 performance = {
                     debounce = 0,
                     throttle = 0,
-                    fetching_timeout = 100,
+                    fetching_timeout = 500,
                     max_view_entries = 15,
                 },
                 experimental = {
@@ -281,17 +284,46 @@ require("lazy").setup({
 
 
 
-    -- Debug Info
     {
-        "https://git.sr.ht/~whynothugo/lsp_lines.nvim",
-        event = "VeryLazy",
-        config = function()
-            require("lsp_lines").setup()
-            vim.diagnostic.config({
-                virtual_text = false,
-                virtual_lines = { only_current_line = true },
-            })
-        end,
+        "piersolenski/wtf.nvim",
+        dependencies = {
+            "MunifTanjim/nui.nvim",
+        },
+        opts = {},
+        keys = {
+            {
+                "<leader>wa",
+                mode = { "n", "x" },
+                function()
+                    require("wtf").ai()
+                end,
+                desc = "Debug diagnostic with AI",
+            },
+            {
+                mode = { "n" },
+                "<leader>ws",
+                function()
+                    require("wtf").search()
+                end,
+                desc = "Search diagnostic with Google",
+            },
+            {
+                mode = { "n" },
+                "<leader>wh",
+                function()
+                    require("wtf").history()
+                end,
+                desc = "Populate the quickfix list with previous chat history",
+            },
+            {
+                mode = { "n" },
+                "<leader>wg",
+                function()
+                    require("wtf").grep_history()
+                end,
+                desc = "Grep previous chat history with Telescope",
+            },
+        },
     },
 
     -- Display current function information under cursor
@@ -429,3 +461,17 @@ require("lazy").setup({
 
 vim.cmd("colorscheme " .. colour_theme)
 require("ibl").setup()
+
+vim.diagnostic.config({
+  -- show virtual text (inline) for errors and warnings
+  virtual_text = {
+    spacing = 4,           -- how many spaces to leave between code and text
+    prefix = "●",          -- symbol to use before the message
+    source = "if_many",
+    severity = { min = vim.diagnostic.severity.WARN },
+    -- you can lower min to INFO/DEBUG if you want more messages
+  },
+  signs = true,
+  underline = true,
+})
+
