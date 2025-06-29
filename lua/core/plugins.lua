@@ -209,8 +209,6 @@ require("lazy").setup({
                     ["<Tab>"]     = cmp.mapping(function(fallback)
                         if cmp.visible() then
                             cmp.select_next_item()
-                        elseif ls.expand_or_jumpable() then
-                            ls.expand_or_jump()
                         else
                             fallback()
                         end
@@ -219,8 +217,6 @@ require("lazy").setup({
                     ["<S-Tab>"]   = cmp.mapping(function(fallback)
                         if cmp.visible() then
                             cmp.select_prev_item()
-                        elseif ls.jumpable(-1) then
-                            ls.jump(-1)
                         else
                             fallback()
                         end

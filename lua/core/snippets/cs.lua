@@ -281,6 +281,10 @@ return {
         t("GetComponentInParent<"), i(1, "ComponentType"), t(">();")
     }),
 
+    s("/*-------*/", {
+        t("/*----------------------------------------------------------------------------*/"),
+    }),
+
     s("addcomp", {
         t("gameObject.AddComponent<"), i(1, "ComponentType"), t(">();")
     }),

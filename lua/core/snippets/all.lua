@@ -29,9 +29,9 @@ return {
         },
         fmta(
             [[
-            {
-                <>
-            }
+{
+    <>
+}
             ]],
             { i(1, ""), }
         )
@@ -41,16 +41,16 @@ return {
         {
             trig = "(){}",
             snippetType = "snippet",
-            desc = "start Function shortcut",
+            desc = "Scoping shortcut w Csharp type bracket",
             wordTrig = false,
         },
         fmta(
-            [[()
+            [[(<>)
 {
     <>
 }
             ]],
-            { i(1, ""), }
+            { i(1, ""), i(2, "")}
         )
     ),
 
